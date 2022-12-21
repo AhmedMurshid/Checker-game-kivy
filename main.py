@@ -52,8 +52,9 @@ kv = ('''
                 text: 'About'
                 on_press: root.manager.current = 'about'
 
-<Main_game_area>:
-            
+<Button@Button>: 
+    size_hint: .1, .1
+
 <Main_game_area>:
     canvas:
         Color:
@@ -62,19 +63,26 @@ kv = ('''
             pos: self.pos
             size: self.size           
     grid: grid
+    button2: 
+        button2
     GridLayout:
-        rows:2
-        size_hint: 1,1
-        Label:
-            font_size: 78
-            font_name: 'fonts/blocky'
-            text: "its players 1 turn."
+        rows:3
         GridLayout:
-            rows: 8
-            cols: 8
-            padding:dp(10) # padding: [dp(20),dp(10),dp(20),dp(10)]
-            size_hint: 1,2
-            #pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            cols:3
+            size_hint: .1,.1
+            id: button2
+            Label:
+                font_size: 88
+                font_name: 'fonts/blocky'
+                text: "its players 1 turn."
+                #pos_hint: {0, 100}
+            
+        GridLayout:
+            rows: 9
+            cols: 9
+            padding:dp(0) # padding: [dp(20),dp(10),dp(20),dp(10)]
+            #size_hint: 1,1
+            pos_hint: {'center_x': 0, 'center_y': 0}
             id: grid
 
         
@@ -125,12 +133,34 @@ class Main_game_area(Screen):
         super().__init__(**kwargs)
         self.click_counts = {}
         self.moves = []
+        startB = Button(text='<-')
+        button3 = self.on_pre_enter()
+        self.button2.add_widget(startB)
+
+        startB.bind(on_press=lambda : self.on_start(button3))
     def handle_piece_movement(self, box):
         # Determine which square was clicked and handle the piece movement accordingly
         square_id = box
         print(f'Square {square_id.text} was clicked!')
     
     #box = ObjectProperty(None)
+    def on_start(self, button):
+        #button = self.on_pre_enter()
+        piece = Image(source='black.png')
+        print("clicked")
+        
+        # Add the piece widget as a child of the button widget
+        if button.text == '1,2':
+            button.add_widget(piece,index=0)
+            print(button.text)
+        if button.text == '1,4':
+            button.add_widget(piece,index=0)
+        if button.text == '1,6':
+            button.add_widget(piece,index=0)
+        if button.text == '1,8':
+            button.add_widget(piece,index=0)
+
+
 
     def on_pre_enter(self):
         grid = GridLayout()
@@ -156,6 +186,7 @@ class Main_game_area(Screen):
             
                 square.bind(on_press=self.button_pressed)
                 self.grid.add_widget(square)
+        
         
         return square
                 
