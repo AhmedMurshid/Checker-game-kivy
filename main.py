@@ -66,9 +66,9 @@ kv = ('''
     button2: 
         button2
     GridLayout:
-        rows:3
+        rows:2
         GridLayout:
-            cols:3
+            cols:2
             size_hint: .1,.1
             id: button2
             Label:
@@ -78,8 +78,8 @@ kv = ('''
                 #pos_hint: {0, 100}
             
         GridLayout:
-            rows: 9
-            cols: 9
+            rows: 8
+            cols: 8
             padding:dp(0) # padding: [dp(20),dp(10),dp(20),dp(10)]
             #size_hint: 1,1
             pos_hint: {'center_x': 0, 'center_y': 0}
@@ -133,11 +133,15 @@ class Main_game_area(Screen):
         super().__init__(**kwargs)
         self.click_counts = {}
         self.moves = []
+        self.squares = []
+        self.piece_image = Image(source='black.png')
+
+
         startB = Button(text='<-')
-        button3 = self.on_pre_enter()
+        #button3 = self.on_pre_enter()
         self.button2.add_widget(startB)
 
-        startB.bind(on_press=lambda : self.on_start(button3))
+        #startB.bind(on_press=lambda : self.on_start(button3))
     def handle_piece_movement(self, box):
         # Determine which square was clicked and handle the piece movement accordingly
         square_id = box
@@ -167,10 +171,10 @@ class Main_game_area(Screen):
 
         for row in range(8):
             for col in range(8):
-                #box = ObjectProperty(None)
-                #box = BoxLayout()
                 coord = f'{row+1},{col+1}'
-                square = Button(text=coord) #the text on the button
+                square = Button(text=coord)
+                self.squares.append(square)
+
                 #row, col = coord.split(',')
 
                 square.id = f'square_{row}_{col}'
@@ -186,6 +190,7 @@ class Main_game_area(Screen):
             
                 square.bind(on_press=self.button_pressed)
                 self.grid.add_widget(square)
+                piece = Image(source='black.png')
         
         
         return square
@@ -217,20 +222,33 @@ class Main_game_area(Screen):
     #     elif button.text == '8,8':
     #         #button.text = '7,7'
     #         piece.pos = button.pos
-    def button_pressed(self, button):
-        # Print the text of the button that was pressed
-        print(f'Button {button.text} was pressed')
+    def button_pressed(self, square):
+        # Print the text of the square that was pressed
+        print(f'square {square.text} was pressed')
 
-        # Create a new piece widget
-        piece = Image(source='black.png')
-        
+        # Create a new piece widget        
         # Add the piece widget as a child of the button widget
-        button.add_widget(piece)
+        # button.add_widget(piece)
 
-        # Set the position of the piece widget to the position of the button widget
-        piece.pos = button.pos
-        self.moves.append(button)
-        print(self.moves)
+        # # Set the position of the piece widget to the position of the button widget
+        # piece.pos = button.pos
+        # self.moves.append(button)
+        # print(self.moves)
+        for i in range(len(self.squares)):
+            if square.text == '1,2':
+                self.piece_image.pos = square.pos
+                square.add_widget(self.piece_image)
+                print(square.text)
+            if square.text == '1,4':
+                self.piece_image.pos = square.pos
+                square.add_widget(self.piece_image)
+            if square.text == '1,6':
+                self.piece_image.pos = square.pos
+                square.add_widget(self.piece_image)
+            if square.text == '1,8':
+                self.piece_image.pos = square.pos
+                square.add_widget(self.piece_image)
+        
 
     def move_piece(self, from_button, to_button):
         # Find the image widget that is a child of the from_button
